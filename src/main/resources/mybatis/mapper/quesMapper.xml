@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--映射文件配置 namespace指向接口-->
+<mapper namespace="live.yremp.community.mapper.QuesMapper">
+    <resultMap id="QuestionResult" type="live.yremp.community.entity.Question">
+        <id column="ques_id" property="ques_id" />
+        <result column="ques_title" property="ques_title"/>
+        <result column="ques_desc" property="ques_desc"/>
+        <result column="ques_userid" property="ques_userid" />
+        <result column="ques_comment" property="ques_comment" />
+        <result column="ques_read" property="ques_read"/>
+        <result column="ques_like" property="ques_like"/>
+        <result column="gmt_create" property="gmt_create"/>
+        <result column="gmt_modified" property="gmt_modified" />
+        <result column="ques_tags" property="ques_tags"/>
+    </resultMap>
+    <insert id="Insert" parameterType="live.yremp.community.entity.Question">
+        INSERT INTO `community`.`ques`( `ques_title`, `ques_desc`, `ques_userid`, `ques_comment`, `ques_read`, `ques_like`, `gmt_create`, `gmt_modified`, `ques_tags`)
+        VALUES (#{ques_title}, #{ques_desc},#{ques_userid}, #{ques_comment}, #{ques_read}, #{ques_like}, #{gmt_create}, #{gmt_modified}, #{ques_tags});
+        -- 将id回填 select Last_INSERT_ID() 获取最新插入的id
+        <selectKey keyProperty="ques_id" keyColumn="ques_id" resultType="Integer" order="AFTER">
+            select Last_INSERT_ID()
+        </selectKey>
+    </insert>
+    <select id="QueryAll" resultMap="QuestionResult" >
+        select * from ques
+    </select>
+
+
+</mapper>

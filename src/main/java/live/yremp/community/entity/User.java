@@ -5,6 +5,7 @@ public class User {
     private String account_id;
     private String user_name;
     private String user_token;
+    private String user_img;
     private Long gmt_create;
     private Long gmt_modified;
 
@@ -40,6 +41,14 @@ public class User {
         this.user_token = user_token;
     }
 
+    public String getUser_img() {
+        return user_img;
+    }
+
+    public void setUser_img(String user_img) {
+        this.user_img = user_img;
+    }
+
     public Long getGmt_create() {
         return gmt_create;
     }
@@ -55,6 +64,4 @@ public class User {
     public void setGmt_modified(Long gmt_modified) {
         this.gmt_modified = gmt_modified;
     }
-
-
 }

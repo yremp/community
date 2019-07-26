@@ -5,19 +5,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" ></script>
     <script th:href="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}" type="javascript"></script>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>发布</title>
     <style>
-        .img-circle{
-            width: 40px;
-            height: 40px;
+            .main{
+                margin: 30px;
+            }
+        .my-div{
+            float: right;
         }
-        .text-style{
-            font-size: 12px;
-            font-weight: normal;
-            color: #999;
-        }
-        .glyphicon-send:before {
-            margin-right: 10px;
+        .btn-success{
+            float: right;
         }
     </style>
 </head>
@@ -60,30 +57,38 @@
                 </li>
             </ul>
         </div><!-- /.navbar-collapse -->
-    </div><!-- /.container-fluid -->
+    </div>
 </nav>
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xl-12" >
-            <h2><span class="glyphicon glyphicon-send" ></span>发现</h2>
+            <h2><span class="glyphicon glyphicon-pencil" ></span>发起</h2>
             <hr>
-            <ul class="media-list">
-                <li class="media">
-                    <div class="media-left">
-                        <a href="#">
-                            <img class="media-object img-circle" src="https://avatars0.githubusercontent.com/u/48859619?v=4" alt="...">
-                        </a>
+            <form action="/publish" method="post" >
+                <div class="form-group">
+                    <label for="title">问题标题</label>
+                    <input type="text" name="title" class="form-control" id="title" placeholder="问题标题" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">问题补充</label>
+                    <textarea name="description" id="description" class="form-control" th:name="description" cols="30" rows="10" required></textarea></div>
+                <div class="form-group">
+                    <label for="tags">添加标签</label>
+                    <input type="text" name="tags" class="form-control" id="tags" placeholder="请输入标签，以逗号隔开">
+                </div>
+                <div class="row">
+                    <div class="alert alert-danger col-lg-9 col-md-12 col-sm-12 col-xl-12" role="alert" th:if="${error!=null}" th:text="${error}"></div>
+                    <div class="col-lg-3 col-md-12 col-sm-12 col-xl-12 my-div" >
+                        <button type="submit" class="btn btn-success ">确认发布</button>
                     </div>
-                    <div class="media-body">
-                        <h4 class="media-heading">Spring Boot开发</h4>
-                        <span>1 个回复 • 14 次浏览 • 2019-07-25 23:17</span>
-                    </div>
-                </li>
-            </ul>
+                </div>
+            </form>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xl-12" >
-            <h4>热门话题</h4>
-
+            <h4>问题发起指南</h4>
+            • 问题标题: 请用精简的语言描述您发布的问题，不超过25字
+            • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料
+            • 选择标签: 选择一个或者多个合适的标签，用逗号隔开，每个标签不超过10个字
         </div>
     </div>
 </div>
