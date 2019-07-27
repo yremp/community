@@ -8,5 +8,7 @@ import java.util.List;
 public interface QuesMapper {
     public void Insert(Question ques);
     public List<Question> QueryAll(Integer offset,Integer size);
+    public List<Question> QueryAllByUserId(Integer user_id,Integer offset,Integer size);
     public Integer count();
+    public Integer countByUserId(Integer user_id);
 }

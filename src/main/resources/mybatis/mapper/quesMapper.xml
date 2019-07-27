@@ -28,9 +28,14 @@
     <select id="QueryAll" resultMap="QuestionResult" parameterType="Integer">
         select * from ques limit #{offset} ,#{size}
     </select>
-
+    <select id="QueryAllByUserId" resultMap="QuestionResult" parameterType="Integer">
+        select * from ques where ques_userid=#{user_id} limit #{offset} ,#{size}
+    </select>
     <select id="count" resultType="Integer">
         select count(1) from ques
+    </select>
+    <select id="countByUserId" resultType="Integer" parameterType="Integer">
+        select count(1) from ques where ques_userid=#{user_id}
     </select>
 
 </mapper>

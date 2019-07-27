@@ -7,16 +7,18 @@
     <meta charset="UTF-8">
     <title th:text="${actioname}"></title>
     <style>
-        .main{
-            margin: 30px;
+        .header{
+            height: 60px;
+            width: 60px;
         }
-        .my-div{
-            float: right;
+
+        .media{
+            height: 80px;
         }
-        .btn-success{
-            float: right;
+        .media-heading{
+            margin-top: 10px;
+            color: cadetblue;
         }
-        .
     </style>
 </head>
 <body>
@@ -64,43 +66,43 @@
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xl-12" >
 
-            <h2><span class="glyphicon glyphicon-send" ></span>发现</h2>
+            <h2 th:text="${actionname}"><span ></span>发现</h2>
             <hr>
             <div class="media" th:each="question:${pagenation.questions}">
                 <div class="media-left media-middle">
                     <a href="#">
-                        <img class="media-object img-circle" th:src="@{${question.user.user_img}}" >
+                        <img class="media-object img-circle header" th:src="@{${question.user.user_img}}" >
                     </a>
                 </div>
                 <div class="media-body">
                     <h4 class="media-heading" th:text="${question.ques_title}"></h4>
-                    ...<span class="text-desc"><span th:text="${question.ques_comment}"></span> 个回复 • <span th:text="${question.ques_read}"></span> 次浏览 • <span th:text="${#dates.format(question.gmt_create, 'yyyy/MMM/dd HH:mm')}"></span></span>
+                    <span class="text-desc"><span th:text="${question.ques_comment}"></span> 个回复 • <span th:text="${question.ques_read}"></span> 次浏览 • <span th:text="${#dates.format((question.gmt_create),'yyyy-MM-dd HH::mm')}"></span></span>
                 </div>
             </div>
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li th:if="${pagenation.showFirstPage}">
-                        <a href="/?page=1" aria-label="Previous" >
+                        <a href="/?page=1"  th:href="@{/profile/question(page=1)}" aria-label="Previous" >
                             <span aria-hidden="true">&lt;&lt;</span>
                         </a>
                     </li>
                     <li th:if="${pagenation.showPrevious}">
-                        <a href="#" aria-label="Previous" th:href="@{/(page=${pagenation.page-1})}">
+                        <a href="#" aria-label="Previous" th:href="@{/profile/question(page=${pagenation.page-1})}">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
                     <li th:each="page :${pagenation.pages}" th:class="${pagenation.page==page}?'active':''">
-                        <a href="#" aria-label="Previous" th:href="@{/(page=${page})}" th:text="${page}" >
-                            <span aria-hidden="true">&laquo;</span>
+                        <a href="#" aria-label="Previous" th:href="@{/profile/question(page=${page})}" th:text="${page}" >
+                            <span aria-hidden="true"></span>
                         </a>
                     </li>
                     <li th:if="${pagenation.showNext}">
-                        <a href="#" th:href="@{/(page=${pagenation.page+1})}" aria-label="Previous">
+                        <a href="#" th:href="@{/profile/question(page=${pagenation.page+1})}" aria-label="Previous">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                     <li th:if="${pagenation.showEndPage}">
-                        <a href="#" th:href="@{/(page=${pagenation.totalPage})}" aria-label="Previous">
+                        <a href="#" th:href="@{/profile/question(page=${pagenation.totalPage})}" aria-label="Previous">
                             <span aria-hidden="true">&gt;&gt;</span>
                         </a>
                     </li>
