@@ -69,7 +69,7 @@ public class PublishController {
         ques.setQues_title(title);
         ques.setQues_desc(desc);
         ques.setQues_tags(tags);
-        ques.setQues_userid(user.getAccount_id());
+        ques.setQues_userid(user.getUser_id());
         ques.setGmt_create(System.currentTimeMillis());
         ques.setGmt_modified(ques.getGmt_create());
         ques.setQues_comment(0);

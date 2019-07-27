@@ -25,9 +25,12 @@
             select Last_INSERT_ID()
         </selectKey>
     </insert>
-    <select id="QueryAll" resultMap="QuestionResult" >
-        select * from ques
+    <select id="QueryAll" resultMap="QuestionResult" parameterType="Integer">
+        select * from ques limit #{offset} ,#{size}
     </select>
 
+    <select id="count" resultType="Integer">
+        select count(1) from ques
+    </select>
 
 </mapper>

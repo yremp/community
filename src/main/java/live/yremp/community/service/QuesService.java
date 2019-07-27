@@ -14,5 +14,6 @@ public class QuesService {
     private QuesMapper quesMapper;
     @Transactional(rollbackFor = Exception.class)
     public void Insert(Question ques){ quesMapper.Insert(ques);}
-    public List<Question> QueryAll(){return quesMapper.QueryAll();};
+    public List<Question> QueryAll(Integer offset, Integer size){return quesMapper.QueryAll(offset,size);};
+    public Integer count(){return quesMapper.count();}
 }

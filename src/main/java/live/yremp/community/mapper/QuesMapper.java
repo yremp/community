@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface QuesMapper {
     public void Insert(Question ques);
-    public List<Question> QueryAll();
+    public List<Question> QueryAll(Integer offset,Integer size);
+    public Integer count();
 }
