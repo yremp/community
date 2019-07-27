@@ -14,6 +14,6 @@ public class UserService {
 
     @Transactional(rollbackFor = Exception.class)
     public void Insert(User user){userMapper.Insert(user);}
-
+    public User findById(Integer user_id){return userMapper.findById(user_id);}
     public User findByToken(String token){return  userMapper.findByToken(token);}
 }
