@@ -5,8 +5,8 @@ package live.yremp.community.dto;
         import java.util.ArrayList;
         import java.util.List;
 @Data
-public class PageDto {
-    private List<QuesDto> questions;
+public class PageDTO {
+    private List<QuesDTO> questions;
     private boolean showPrevious;
     private boolean showFirstPage;
     private boolean showNext;
@@ -15,17 +15,11 @@ public class PageDto {
     private List<Integer> pages= new ArrayList<>();
     private Integer totalPage;
 
-    public void setPagenation(Integer totalCount, Integer page, Integer size) {
-        if(totalCount%size==0){
-            totalPage=totalCount/size;
-        }
-        else {
-            totalPage=totalCount/size+1;
-        }
+    public void setPagenation(Integer totalPage, Integer page) {
         if(page<1) page=1;
 
         if(page>totalPage) page=totalPage;
-
+        this.totalPage=totalPage;
         pages.add(page);
         this.page=page;
         for(int i=1;i<=3;i++){

@@ -1,10 +1,8 @@
 package live.yremp.community.controller;
 
-import jdk.nashorn.internal.objects.annotations.Getter;
-import live.yremp.community.dto.PageDto;
+import live.yremp.community.dto.PageDTO;
 import live.yremp.community.entity.User;
 import live.yremp.community.service.QuesDtoService;
-import live.yremp.community.service.QuesService;
 import live.yremp.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,8 +48,9 @@ public class ProfileController {
         else if(action.equals("reply")){
             model.addAttribute("action","reply");
             model.addAttribute("actioname","最新回复");
+
         }
-        PageDto pagenation=quesDtoService.list(user.getUser_id(),page,size);
+        PageDTO pagenation=quesDtoService.list2(user.getUser_id(),page,size);
         model.addAttribute("pagenation",pagenation);
         return "profile";
     }

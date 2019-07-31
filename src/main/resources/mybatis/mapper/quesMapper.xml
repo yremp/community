@@ -26,7 +26,7 @@
         </selectKey>
     </insert>
     <select id="QueryAll" resultMap="QuestionResult" parameterType="Integer">
-        select * from ques limit #{offset} ,#{size}
+        select * from ques ORDER BY gmt_create desc limit #{offset} ,#{size}
     </select>
     <select id="QueryAllByUserId" resultMap="QuestionResult" parameterType="Integer">
         select * from ques where ques_userid=#{user_id} limit #{offset} ,#{size}
@@ -37,5 +37,19 @@
     <select id="countByUserId" resultType="Integer" parameterType="Integer">
         select count(1) from ques where ques_userid=#{user_id}
     </select>
-
+    <select id="findById" resultType="live.yremp.community.entity.Question" parameterType="Integer">
+        select * from ques where ques_id=#{ques_id}
+    </select>
+    <update id="upDate">
+        update ques set ques_title=#{ques_title} ,ques_desc=#{ques_desc} ,ques_tags=#{ques_tags} where ques_id=#{ques_id}
+    </update>
+    <update id="UpDateRead">
+        update ques set ques_read=#{ques_read}  where ques_id=#{ques_id}
+    </update>
+    <update id="UpDateComment">
+        update ques set ques_comment=#{ques_comment} where ques_id=#{ques_id}
+    </update>
+    <select id="SelectRelatated" parameterType="live.yremp.community.entity.Question"  resultMap="QuestionResult">
+        select * from ques where ques_id!=#{ques_id} and ques_tags regexp #{ques_tags}
+    </select>
 </mapper>

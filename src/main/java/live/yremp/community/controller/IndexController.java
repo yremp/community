@@ -1,10 +1,8 @@
 package live.yremp.community.controller;
 
-import live.yremp.community.dto.PageDto;
-import live.yremp.community.dto.QuesDto;
+import live.yremp.community.dto.PageDTO;
 import live.yremp.community.entity.User;
 import live.yremp.community.service.QuesDtoService;
-import live.yremp.community.service.QuesService;
 import live.yremp.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.ArrayList;
 
 @Controller
 public class IndexController {
@@ -28,26 +26,23 @@ public class IndexController {
                                   @RequestParam(value = "page",defaultValue = "1")Integer page,
                                   @RequestParam(value = "size",defaultValue = "5")Integer size){
         Cookie [] cookies ;
-        try{
            cookies = request.getCookies();
-            for(Cookie cookie:cookies){
-                if(cookie.getName().equals("token")){
-                    String token=cookie.getValue();
+        if(cookies!=null&&cookies.length!=0) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("token")) {
+                    String token = cookie.getValue();
                     User user = userService.findByToken(token);
-                    if(user!=null){
-                        request.getSession().setAttribute("user",user);
+                    if (user != null) {
+                        request.getSession().setAttribute("user", user);
                     }
                     break;
                 }
             }
-            PageDto pagetion =quesDtoService.list(page,size);
-            model.addAttribute("pagetion",pagetion);
-            return "index";
-
-        }catch (Exception e){
-
-            return "index";
         }
+            PageDTO pagenation=quesDtoService.list1(page,size);
+            model.addAttribute("pagenation",pagenation);
+            return "index";
+
 
     }
 }

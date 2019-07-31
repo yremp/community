@@ -1,8 +1,8 @@
 package live.yremp.community.provider;
 
 import com.alibaba.fastjson.JSON;
-import live.yremp.community.dto.AccessTokenDto;
-import live.yremp.community.dto.GithubUser;
+import live.yremp.community.dto.AccessTokenDTO;
+import live.yremp.community.dto.GithubUserDTO;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @Component
 public class GithubProvider {
-    public String getAccessToken(AccessTokenDto accessTokenDto){
+    public String getAccessToken(AccessTokenDTO accessTokenDto){
         MediaType mediaType
                 = MediaType.get("application/json; charset=utf-8");
 
@@ -32,7 +32,7 @@ public class GithubProvider {
         return null;
     }
 
-    public GithubUser getGithubUser(String accessToken) {
+    public GithubUserDTO getGithubUser(String accessToken) {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
@@ -41,8 +41,8 @@ public class GithubProvider {
         try {
             Response response = client.newCall(request).execute();
             String string = response.body().string();
-            GithubUser githubUser = JSON.parseObject(string, GithubUser.class);
-            return githubUser;
+            GithubUserDTO githubUserDTO = JSON.parseObject(string, GithubUserDTO.class);
+            return githubUserDTO;
         } catch (IOException e) {
             return null;
         }

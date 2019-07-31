@@ -4,7 +4,7 @@ import live.yremp.community.entity.User;
 import lombok.Data;
 
 @Data
-public class QuesDto {
+public class QuesDTO {
     private Integer ques_id;
     private String ques_title;
     private String ques_desc;
