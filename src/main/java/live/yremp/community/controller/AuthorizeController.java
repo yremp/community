@@ -1,7 +1,7 @@
 package live.yremp.community.controller;
 
-import live.yremp.community.dto.AccessTokenDto;
-import live.yremp.community.dto.GithubUser;
+import live.yremp.community.dto.AccessTokenDTO;
+import live.yremp.community.dto.GithubUserDTO;
 import live.yremp.community.entity.User;
 import live.yremp.community.provider.GithubProvider;
 import live.yremp.community.service.UserService;
@@ -20,9 +20,9 @@ import java.util.UUID;
 
 public class AuthorizeController {
     @Autowired
-    private GithubProvider githubProvider=null;
+    private GithubProvider githubProvider = null;
     @Autowired
-    private UserService userService=null;
+    private UserService userService = null;
     @Value("${github.client.id}")
     private String clientID;
     @Value("${github.client.secret}")
@@ -31,36 +31,58 @@ public class AuthorizeController {
     private String redirectURL;
 
     @RequestMapping("/callback")
-    public String callback(@RequestParam(name = "code")String code,
-                           @RequestParam(name = "state")String state,
-                           HttpServletResponse response){
-        AccessTokenDto accessTokenDto = new AccessTokenDto();
+    public String callback(@RequestParam(name = "code") String code,
+                           @RequestParam(name = "state") String state,
+                           HttpServletResponse response,
+                           HttpServletRequest request) {
+        AccessTokenDTO accessTokenDto = new AccessTokenDTO();
         accessTokenDto.setCode(code);
         accessTokenDto.setState(state);
         accessTokenDto.setClient_id(clientID);
         accessTokenDto.setClient_secret(clientSC);
         accessTokenDto.setRedirect_uri(redirectURL);
-        String accesstaken=githubProvider.getAccessToken(accessTokenDto);
-        GithubUser githubUser =githubProvider.getGithubUser(accesstaken);
-        if(githubUser!=null) {
+        String accesstaken = githubProvider.getAccessToken(accessTokenDto);
+        GithubUserDTO githubUserDTO = githubProvider.getGithubUser(accesstaken);
+        if (githubUserDTO != null) {
 //            登陆成功
-            User user = new User();
-            String token=UUID.randomUUID().toString();
-            user.setUser_token(token);
-            System.out.println(githubUser.getName());
-            user.setUser_name(githubUser.getName());
-            user.setAccount_id(String.valueOf(githubUser.getId()));
-            user.setGmt_create(System.currentTimeMillis());
-            user.setGmt_modified(user.getGmt_create());
-            user.setUser_img(githubUser.getAvatarUrl());
-            userService.Insert(user);
-            response.addCookie(new Cookie("token",token));
+            User user1 = null;
+            String token = UUID.randomUUID().toString();
+            try {
+                user1 = userService.findByGithubId(String.valueOf(githubUserDTO.getId()));
+                if (user1 != null) {
+                    response.addCookie(new Cookie("token", token));
+                    user1.setUser_token(token);
+                    userService.upTokenById(token, user1.getUser_id());
+                } else {
+                    User user = new User();
+                    user.setUser_token(token);
+                    user.setUser_name(githubUserDTO.getName());
+                    user.setAccount_id(String.valueOf(githubUserDTO.getId()));
+                    user.setGmt_create(System.currentTimeMillis());
+                    user.setGmt_modified(user.getGmt_create());
+                    user.setUser_img(githubUserDTO.getAvatarUrl());
+                    userService.Insert(user);
+                    request.getSession().setAttribute("user", user);
+                }
+            } catch (Exception w) {
+
+            }
             return "redirect:/";
-        }else {
+        } else {
 //            登陆失败
             return "redirect:/";
 
         }
 
+    }
+
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest httpServletRequest,
+                         HttpServletResponse httpServletResponse) {
+        httpServletRequest.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        httpServletResponse.addCookie(cookie);
+        return "redirect:/";
     }
 }

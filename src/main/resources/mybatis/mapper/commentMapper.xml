@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--映射文件配置 namespace指向接口-->
+<mapper namespace="live.yremp.community.mapper.CommentMapper">
+<insert id="Insert">
+        INSERT INTO `community`.`comm`( `comm_parent_id`, `comm_type`, `comm_user_id`, `comm_info`, `comm_count`, `comm_like`, `gmt_create`, `gmt_modified`)
+    VALUES (#{comm_parent_id}, #{comm_type}, #{comm_user_id}, #{comm_info},#{comm_count}, #{comm_like}, #{gmt_create}, #{gmt_modified})
+</insert>
+    <select id="SelectById" parameterType="Integer" resultType="live.yremp.community.entity.Comment">
+        SELECT * FROM comm WHERE comm_id =#{id}
+    </select>
+    <select id="ListByQuestionId" parameterType="Integer" resultType="live.yremp.community.entity.Comment">
+        SELECT * FROM comm WHERE comm_parent_id =#{ques_id} and comm_type=#{comm_type} ORDER BY gmt_create desc
+    </select>
+    <update id="UpDateCount">
+        UPDATE `community`.`comm` SET `comm_count`=#{comm_count} where `comm_id`=#{comm_id}
+    </update>
+</mapper>

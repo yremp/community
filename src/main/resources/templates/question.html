@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <script src="https://cdn.bootcdn.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <script src="https://yremp.live/wp-content/uploads/resource/js/moment.js"></script>
+    <script th:href="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}" type="javascript"></script>
+    <meta charset="UTF-8">
+    <title th:text="${question.ques_title}"></title>
+    <style>
+        body {
+            background: rgba(152, 150, 150, 0.1);
+        }
+
+        .header {
+            height: 60px;
+            width: 60px;
+        }
+
+        .media {
+            height: 80px;
+        }
+
+        .row {
+            margin: 10px;
+            background: white;
+        }
+
+        body {
+            background: rgba(152, 150, 150, 0.1);
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .text-desc {
+            font-size: 12px;
+            font-weight: normal;
+            color: #999;
+        }
+
+        .comment {
+            margin: 15px 0px;
+        }
+
+
+        .btn-replay{
+            float: right;
+            margin: 10px auto;
+        }
+        .media-heading {
+            margin-top: 20px;
+            font-size: 15px;
+            color: cadetblue;
+        }
+
+        .edit_btn {
+            float: right;
+        }
+
+        .comment_icon:hover {
+            color: #499ef3;
+            cursor: pointer;
+        }
+
+        .comment_listItem {
+
+        }
+
+        .comment_icon.active {
+            color: #499ef3;
+        }
+
+        .user {
+            height: 60px;
+            width: 60px;
+        }
+
+        .second_body {
+            border: 1px solid #eee !important;
+        }
+
+        .comment_list {
+            margin: 10px 0px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .second_header {
+            width: 60px;
+            height: 60px;
+            margin-top: 10px;
+            margin-left: 70px;
+        }
+
+        .second_body {
+            margin-top: 20px;
+            border-radius: 5px;
+            border: 1px red;
+        }
+
+
+        .textinput {
+            margin-top: 30px;
+        }
+
+        .comm_text {
+            position: absolute;
+            margin-left: 4px;
+            margin-top: -2px;
+        }
+
+        .question_tag {
+            border-radius: 5px;
+            padding: 5px;
+            margin-left: 10px;
+            background: #66A3FF;
+            color: #FFFFFF;
+        }
+
+        .everytag {
+            margin-left: 10px;
+        }
+       .userimg{
+
+           margin-top: 3px;
+           margin-left: 13px;
+           height: 140px;
+           border: 1px solid #eee;
+           border-radius: 5px;
+       }
+        @media(max-width:500px) {
+            .userimg{
+                margin-top: 70px;
+            }
+            .successed1 {
+                margin: 10px 0px 10px 225px;
+            }
+            .successed2{
+                margin: 10px 0px 10px 300px;
+            }
+        }
+        @media (min-width: 600px) {
+            .successed1 {
+                margin: 10px auto;
+                float: right;
+            }
+            .successed2{
+                margin: 20px auto;
+                float: right;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">流年社区</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+            </ul>
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索话题">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li th:if="${session.user!=null}">
+                    <a href="/publish">提问</a>
+                </li>
+                <li th:if="${session.user==null}"><a
+                        href="https://github.com/login/oauth/authorize?client_id=053b1183a9084a8a5a7c&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登录</a>
+                </li>
+                <li class="dropdown" th:if="${session.user!= null}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><span th:text="${session.user.getUser_name()}"></span><span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/profile/question">我的问题</a></li>
+                        <li><a href="#">个人资料</a></li>
+                        <li><a href="/logout">退出登录</a></li>
+
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div>
+</nav>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xl-12">
+            <!--            文章内容-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+                <h4 th:text="${question.ques_title}"></h4>
+                <span class="text-desc">
+
+                作者：<span th:text="${question.user.user_name}"></span>
+                | 发布时间：<span th:text="${#dates.format((question.gmt_create),'yyyy-MM-dd HH:mm:ss')}"></span>
+                | 阅读数：<span th:text="${question.ques_read}"></span>
+            </span>
+            </div>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12" th:text="${question.ques_desc}">
+            </div>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+            <span class="glyphicon glyphicon-tags question_tag" aria-hidden="true"
+                  th:each="tag :${question.getQues_tags().split(',')}"><span class="everytag"
+                                                                             th:text="${tag}">tag</span></span>
+            <a th:href="@{'/publish/'+${question.ques_id}}"
+               th:if="${session.user != null && session.user.user_id == question.ques_userid}" class="edit_btn">
+                <span class="glyphicon glyphicon-edit " aria-hidden="true"> </span>
+                编辑
+            </a>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+                <h4>
+                    当前共有<span th:text="${question.ques_comment}"></span>个回复
+                </h4>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+
+                <!--            回复列表模块-->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12 comment_listItem" th:each="comment:${comments}">
+                    <div class="media-left media-middle">
+                        <span>
+                            <img class="media-object img-thumbnail header" th:src="@{${comment.user.user_img}}">
+                        </span>
+                    </div>
+                    <div class="media-body" th:id="${'comment-body-'+comment.comm_id}">
+                        <span class="media-heading" th:text="${comment.user.user_name}"></span><br>
+                        <span class="text-desc" th:text="${comment.comm_info}">这是回复内容</span><br>
+                        <span class="glyphicon glyphicon-comment comment_icon " onclick="display(this)"
+                              th:data-id="${comment.comm_id}"><span class="comm_text"
+                                                                    th:text="${comment.comm_count}">2</span></span>
+                        <span class="text-desc pull-right"
+                              th:text="${#dates.format((comment.gmt_create),'yyyy-MM-dd HH:mm:ss')}">时间</span>
+                    </div>
+                    <!--                    这是二级评论展示模块-->
+                    <div class="collapse  col-lg-12 col-md-12 col-sm-12 col-xl-12 second_body"
+                         th:id="${'comment_'+comment.comm_id}">
+                        <!--                        二级评论由js输出-->
+                        <!--                        <div class="media" th:if="${pagenation.questions!=null}"-->
+                        <!--                             th:each="question:${pagenation.questions}">-->
+                        <!--                            <div class="media-left media-middle">-->
+                        <!--                                <a th:href="@{'/question/'+${question.ques_id}}">-->
+                        <!--                                    <img class="media-object img-circle header" th:src="@{${question.user.user_img}}">-->
+                        <!--                                </a>-->
+                        <!--                            </div>-->
+                        <!--                            <div class="media-body">-->
+                        <!--                                <h4 class="media-heading" th:text="${question.ques_title}"></h4>-->
+                        <!--                                <span class="text-desc">12344</span>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
+
+                        <div class="col-md-12 col-sm-12 col-xl-12 ">
+                            <textarea class="form-control textinput" rows="1"
+                                      th:id="${'replay-'+comment.comm_id}">
+                            </textarea>
+                            <button type="submit" class="btn btn-success successed1 " onclick="repost(this)"
+                                    th:data-id="${comment.comm_id}">回复
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <hr class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+                </div>
+            </div>
+            <!--            评论输入模块-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12 " id="comment_body">
+                <!--            当前用户头像和姓名-->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+                    <div class="media-left media-middle ">
+                        <span>
+                            <img class="media-object img-thumbnail user" th:if="${session.user!=null}"
+                                 th:src="${session.user.user_img}">
+                            <img class="media-object img-thumbnail user" th:if="${session.user==null}"
+                                 src="https://yremp.live/wp-content/uploads/2019/06/QQ图片20190629212230.jpg">
+                        </span>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" th:if="${session.user!=null}"
+                            th:text="${session.user.user_name}"></h4>
+                        <h4 class="media-heading" th:if="${session.user==null}">未登录用户</h4>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-12 col-sm-12 col-xl-12">
+                <input type="hidden" id="ques_id" th:value="${question.ques_id}">
+                <textarea class="form-control comment " id="comment_info" rows="6"></textarea>
+                <button type="button" onclick="post()" class="btn btn-success successed2">回复</button>
+            </div>
+        </div>
+
+        <!--        右侧发起人-->
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xl-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12 userimg">
+                <h5>发起人</h5>
+                <div class="media">
+                    <div class="media-left media-middle">
+                        <span>
+                            <img class="media-object img-circle header" th:src="@{${question.user.user_img}}">
+                        </span>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" th:text="${question.user.user_name}"></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12" >
+                <h5>相关问题</h5>
+                <ul class="list-group">
+                    <li  th:each="relataedquestion:${relatedquestions}"  class="list-group-item">
+                        <a th:href="@{'/question/'+${relataedquestion.ques_id}}" style="font-size: 13px" th:text="${relataedquestion.ques_title}"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
+
+
+<script>
+    function commenTo(parentid, type, content) {
+
+        $.ajax({
+            type: "POST",
+            contentType: 'application/json',
+            url: "/comment",
+            data: JSON.stringify({
+                "comm_parent_id": parentid,
+                "comm_info": content,
+                "comm_type": type
+            }),
+            success: function (response) {
+                if (response.code == 100) {
+                    window.location.reload();
+                } else if (response.code == 108) {
+                    alert(response.message)
+                } else {
+                    if (response.code == 101) {
+                        var IsAccept = confirm(response.message);
+                        if (IsAccept) {
+                            window.open("https://github.com/login/oauth/authorize?client_id=053b1183a9084a8a5a7c&redirect_uri=http://localhost:8080/callback&scope=user&state=1")
+                            window.localStorage.setItem("closable", "true");
+                        }
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            }
+        })
+    }
+
+    //一级评论提交
+    function post() {
+        var question_id = $("#ques_id").val();
+        var comment_info = $("#comment_info").val();
+        commenTo(question_id, 1, comment_info);
+
+    }
+
+    //二级评论提交
+    function repost(e) {
+        var comment_id = e.getAttribute("data-id");
+        var comment_info = $("#replay-" + comment_id).val();
+        commenTo(comment_id, 2, comment_info);
+
+    }
+
+    //二级评论提交
+    //展开二级评论列表
+    function display(e) {
+        var id = e.getAttribute("data-id");
+        var comment = $("#comment_" + id);
+        var IsDisplay = e.getAttribute("data-DisPlay");
+        if (IsDisplay) {
+            comment.removeClass("in");
+            e.removeAttribute("data-DisPlay");
+            e.classList.remove("active");
+        } else {
+            //展开二级评论,判断是否加载数据
+            var comment_body = $("#comment_" + id);
+            //已经加载
+            if (comment_body.children().length != 1) {
+                comment.addClass("in");
+                //标记展开状态
+                e.setAttribute("data-DisPlay", "in");
+                e.classList.add("active");
+            }
+            //没有加载
+            else {
+                comment.addClass("in");
+                //标记展开状态
+                e.setAttribute("data-DisPlay", "in");
+                e.classList.add("active");
+
+                $.getJSON("/comment/" + id, function (data) {
+
+                    $.each(data.data.reverse(), function (index, comment) {
+                        //时间戳
+                        var comment_time = $("<span/>", {
+                            "class": "text-desc comment_time",
+                            "text": moment(comment.gmt_create).format('YYYY-MM-DD H:mm:ss ')
+                        });
+                        var br = $("<br>", {});
+                        //回复内容
+                        var comment_decs = $("<span/>", {
+                            "class": "text-desc comment_desc",
+                            "text": comment.comm_info
+                        });
+                        //评论者名字
+                        var comment_user = $("<h4/>", {
+                            "class": "media-heading comment_user_name",
+                            "text": comment.user.user_name
+                        });
+
+                        var content_info = $("<div/>", {
+                            "class": "media-body"
+                        });
+                        //左边头像
+                        var comm_img = $("<img/>", {
+                            "class": "media-object img-thumbnail second_header",
+                            "src": comment.user.user_img
+                        });
+
+                        var imgpack = $("<div/>", {
+                            "class": "media-left media-middle"
+                        });
+                        imgpack.append(comm_img);
+
+                        var info = $("<div/>", {
+                            "class": "media comment_list"
+                        });
+
+                        content_info.append(comment_user);
+                        content_info.append(comment_decs);
+                        content_info.append(br);
+                        content_info.append(comment_time);
+                        info.append(imgpack);
+                        info.append(content_info);
+                        comment_body.prepend(info);
+
+
+                    });
+                });
+            }
+
+        }
+    }
+
+</script>

@@ -12,8 +12,15 @@ public class UserService {
 @Resource
     private UserMapper userMapper;
 
+    public User findById(Integer user_id){return userMapper.findById(user_id);}
+
+    public User findByGithubId(String user_id){return userMapper.findByGithubId(user_id);}
+
+    public User findByToken(String token){return  userMapper.findByToken(token);}
+
+    @Transactional(rollbackFor = Exception.class)
+    public void upTokenById(String token,Integer user_id){ userMapper.upTokenById(token,user_id);}
     @Transactional(rollbackFor = Exception.class)
     public void Insert(User user){userMapper.Insert(user);}
-    public User findById(Integer user_id){return userMapper.findById(user_id);}
-    public User findByToken(String token){return  userMapper.findByToken(token);}
+
 }

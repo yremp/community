@@ -20,4 +20,10 @@
     <select id="findById" parameterType="Integer" resultType="live.yremp.community.entity.User">
         select * from user where user_id=#{user_id}
     </select>
+    <select id="findByGithubId" parameterType="String" resultType="live.yremp.community.entity.User">
+        select * from user where account_id=#{user_id}
+    </select>
+    <update id="upTokenById">
+        UPDATE `community`.`user` SET `user_token` =#{token} WHERE `user_id` = #{user_id}
+    </update>
 </mapper>
