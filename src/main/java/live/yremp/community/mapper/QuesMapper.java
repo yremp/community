@@ -27,4 +27,6 @@ public interface QuesMapper {
     public void UpDateComment(Question question);
 
     public List<Question> SelectRelatated (Question question);
+    
+    public void DeleteById(Integer ques_id);
 }

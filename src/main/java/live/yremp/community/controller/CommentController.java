@@ -45,8 +45,8 @@ public class CommentController {
         comment.setGmt_modified(System.currentTimeMillis());
         comment.setComm_user_id(user.getUser_id());
         //        在评论对应的Service中处理：问题回复/评论回复
-        commentService.Insert(comment,user);
-        ResultDTO resultDTO=ResultDTO.ERROROF(100,"操作成功");
+        commentService.Insert(comment);
+        ResultDTO resultDTO=ResultDTO.OKOF(100,"操作成功");
         return resultDTO;
     }
 //    二级评论处理逻辑

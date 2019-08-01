@@ -52,4 +52,7 @@
     <select id="SelectRelatated" parameterType="live.yremp.community.entity.Question"  resultMap="QuestionResult">
         select * from ques where ques_id!=#{ques_id} and ques_tags regexp #{ques_tags}
     </select>
+    <delete id="DeleteById" parameterType="Integer">
+        delete from ques where ques_id=#{value}
+    </delete>
 </mapper>

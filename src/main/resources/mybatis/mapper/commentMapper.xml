@@ -18,4 +18,10 @@
     <update id="UpDateCount">
         UPDATE `community`.`comm` SET `comm_count`=#{comm_count} where `comm_id`=#{comm_id}
     </update>
+    <select id="findByParentId" parameterType="Integer"  resultType="live.yremp.community.entity.Comment">
+        select * from comm where comm_parent_id =#{comm_parent_id} and comm_type =#{comm_type}
+    </select>
+    <delete id="deleteById" parameterType="Integer" >
+        delete from comm where comm_id =#{comm_id}
+    </delete>
 </mapper>

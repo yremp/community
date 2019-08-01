@@ -9,6 +9,9 @@ public enum PeculiarExceptionCodeAndMessage implements Exception {
     PARAM_ERROR(104,"错误，评论类型错误"),
     COMMENT_NOT_FOUND(105,"错误，评论不存在"),
     COMMENT_EMPTY(108,"提示，评论不能为空"),
+    FILE_UPLOAD_ERROR(109,"文件上传败"),
+    DELETE_QUESTION_NOT_FOUND(110,"删除的问题不存在"),
+    COMMENT_NOT_FOUNDSON(111,"当前评论没有二级评论")
     ;
 
 

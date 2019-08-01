@@ -2,6 +2,7 @@ package live.yremp.community.controller;
 
 import live.yremp.community.dto.PageDTO;
 import live.yremp.community.entity.User;
+import live.yremp.community.provider.UserProvider;
 import live.yremp.community.service.QuesDtoService;
 import live.yremp.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class ProfileController {
     private UserService userService;
     @Autowired
     private QuesDtoService quesDtoService;
+    @Autowired
+    UserProvider userProvider;
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable("action") String action,
                           @RequestParam(value = "page",defaultValue = "1")Integer page,
@@ -27,17 +30,7 @@ public class ProfileController {
                           Model model,
                           HttpServletRequest request){
         User user=null;
-        Cookie[] cookies = request.getCookies();
-        for(Cookie cookie:cookies){
-            if(cookie.getName().equals("token")){
-                String token=cookie.getValue();
-                user = userService.findByToken(token);
-                if(user!=null){
-                    request.getSession().setAttribute("user",user);
-                }
-                break;
-            }
-        }
+        user=userProvider.login(request,user);
         if(user==null){
             return "redirect:/";
         }
@@ -53,5 +46,25 @@ public class ProfileController {
         PageDTO pagenation=quesDtoService.list2(user.getUser_id(),page,size);
         model.addAttribute("pagenation",pagenation);
         return "profile";
+    }
+    @GetMapping("/user/{action}")
+    public String profile(@PathVariable("action") String action,
+                          Model model,
+                          HttpServletRequest request){
+        User user=null;
+        user=userProvider.login(request,user);
+        if(user==null){
+            return "redirect:/";
+        }
+        if(action.equals("info")){
+            model.addAttribute("action","info");
+            model.addAttribute("actioname","我的信息");
+        }
+        else if(action.equals("edit")){
+            model.addAttribute("action","edit");
+            model.addAttribute("actioname","编辑资料");
+
+        }
+        return "user";
     }
 }

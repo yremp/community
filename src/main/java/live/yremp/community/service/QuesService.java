@@ -36,8 +36,9 @@ public class QuesService {
     public List<Question> QueryAllByUserId(Integer user_id, Integer offset, Integer size) {
         return quesMapper.QueryAllByUserId(user_id, offset, size);
     }
-
-    ;
+    public void DeleteById(Integer ques_id){
+        quesMapper.DeleteById(ques_id);
+    }
 
     public Question findById(Integer ques_id) {
         return quesMapper.findById(ques_id);

@@ -29,7 +29,7 @@ public class CommentService {
     private UserService userService;
 
     @Transactional
-    public void Insert(Comment comment,User commentuser) {
+    public void Insert(Comment comment) {
 //        评论对应的问题不出存在
         if (comment.getComm_parent_id() == null || comment.getComm_parent_id() == 0) {
             throw new PeculiarException(PeculiarExceptionCodeAndMessage.PARAM_NOT_FOUND);
@@ -87,4 +87,10 @@ public class CommentService {
         }
         return commDTOList;
     }
+
+    public List<Comment> findByParentId(Integer comm_parent_id, Integer comm_type) {
+        return commentMapper.findByParentId(comm_parent_id, comm_type);
+    }
+
+    public void deleteById(Integer comm_id){ commentMapper.deleteById(comm_id);}
 }

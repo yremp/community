@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:src="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/yremp/editormd/css/editormd.css">
+    <script src="https://cdn.jsdelivr.net/gh/yremp/editormd@1.0.1/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/yremp/editormd/editormd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
-    <script th:href="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}" type="javascript"></script>
+
     <meta charset="UTF-8">
     <title>发布</title>
     <style>
@@ -17,6 +20,9 @@
 
         .btn-success {
             float: right;
+        }
+        #icon-publish{
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -68,7 +74,7 @@
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xl-12">
-            <h2><span class="glyphicon glyphicon-pencil"></span>发起</h2>
+            <h2><span class="glyphicon glyphicon-folder-open" id="icon-publish"></span>发起</h2>
             <hr>
             <form action="/publish" method="post">
                 <input type="hidden" name="ques_id" th:value="${ques_id}" >
@@ -76,14 +82,29 @@
                     <label for="title">问题标题</label>
                     <input type="text" name="title" class="form-control" id="title" placeholder="问题标题" th:value="${ques_tetle}" required>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="question-desc">
                     <label for="description">问题补充</label>
-                    <textarea name="description" id="description" class="form-control" th:name="description" th:text="${ques_desc}" cols="30"
+                    <textarea name="description" id="description" class="form-control" th:name="description"
+                              th:text="${ques_desc}" cols="30"
                               rows="10" required></textarea></div>
-                <div class="form-group">
+                <div class="form-group" id="question">
                     <label for="tags">添加标签</label>
                     <input type="text" name="tags" class="form-control" id="tags" th:value="${ques_tags}" placeholder='请输入标签，以半角,隔开'>
                 </div>
+                <script type="text/javascript">
+                    $(function () {
+                        var editor = editormd("question-desc", {
+                            width: "100%",
+                            height: 400,
+                            path: "https://cdn.jsdelivr.net/gh/yremp/editormd/lib/",
+                            placeholder: "请输入问题描述",
+                            emoji: true,
+                            imageUpload: true,
+                            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                            imageUploadURL: "/file/upload"
+                        });
+                    });
+                </script>
                 <div class="row">
                     <div class="alert alert-danger col-lg-9 col-md-12 col-sm-12 col-xl-12" role="alert"
                          th:if="${error!=null}" th:text="${error}"></div>
@@ -103,5 +124,5 @@
 </div>
 </body>
 </html>
-<script src="https://cdn.bootcdn.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
-<script src="https://cdn.bootcdn.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+
+

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" >
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <script th:href="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}" type="javascript"></script>
+    <meta charset="UTF-8">
+    <title th:text="${actioname}"></title>
+    <style>
+        body {
+
+        }
+
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">流年社区</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+            </ul>
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="搜索话题">
+                </div>
+                <button type="submit" class="btn btn-default">搜索</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li th:if="${session.user!=null}">
+                    <a href="/publish">提问</a>
+                </li>
+                <li th:if="${session.user==null}"><a href="https://github.com/login/oauth/authorize?client_id=053b1183a9084a8a5a7c&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登录</a></li>
+                <li class="dropdown" th:if="${session.user!= null}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false"><span th:text="${session.user.getUser_name()}"></span><span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">消息中心</a></li>
+                        <li><a href="#">个人资料</a></li>
+                        <li><a href="/logout">退出登录</a></li>
+
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div>
+</nav>
+<div class="container-fluid main">
+    <div class="row">
+
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xl-12" th:if="${action=='info'}">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xl-12" >
+                个人信息
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xl-12" th:if="${action=='edit'}">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xl-12"  >
+                编辑资料
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xl-12" >
+            <div class="list-group">
+                <a href="/user/info" th:class="${action=='info'}?'active list-group-item':'list-group-item'" class="section">
+                    我的信息
+                </a>
+                <a href="/user/edit" th:class="${action=='edit'}?'active list-group-item':'list-group-item'" class="section">编辑资料 </a>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

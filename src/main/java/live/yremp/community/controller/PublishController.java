@@ -3,6 +3,7 @@ package live.yremp.community.controller;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import live.yremp.community.entity.Question;
 import live.yremp.community.entity.User;
+import live.yremp.community.provider.UserProvider;
 import live.yremp.community.service.QuesDtoService;
 import live.yremp.community.service.QuesService;
 import live.yremp.community.service.UserService;
@@ -22,23 +23,12 @@ public class PublishController {
     UserService userService;
     @Autowired
     QuesDtoService quesDtoService;
+    @Autowired
+    UserProvider userProvider;
 
     @GetMapping ("/publish")
     public String publish(HttpServletRequest request){
-        Cookie [] cookies = request.getCookies();
-        if(cookies!=null&&cookies.length!=0)
-        {
-            for(Cookie cookie:cookies){
-                if(cookie.getName().equals("token")){
-                    String token=cookie.getValue();
-                    User user = userService.findByToken(token);
-                    if(user!=null){
-                        request.getSession().setAttribute("user",user);
-                    }
-                    break;
-                }
-            }
-        }
+        userProvider.login(request);
         return "publish";
     }
 
@@ -49,34 +39,21 @@ public class PublishController {
                             @RequestParam(value = "ques_id",required = false) Integer ques_id,
                             HttpServletRequest request,
                             Model model){
-        User user=new User();
-        Cookie [] cookies = request.getCookies();
-        if(cookies!=null&&cookies.length!=0)
-        {
-            for(Cookie cookie:cookies){
-                if(cookie.getName().equals("token")){
-                    String token=cookie.getValue();
-                    user = userService.findByToken(token);
-                    if(user!=null){
-                        request.getSession().setAttribute("user",user);
-                    }
-                    break;
-                }
-            }
-        }
-        if(user==null){
-            model.addAttribute("error","未登录用户");
-            return "/publish";
-        }
+        User user=null;
         if(ques_title==null){
-            model.addAttribute("error","未登录用户");
+            model.addAttribute("error","请输入问题摘要");
             return "/publish";
         }
         if(ques_desc==null){
-            model.addAttribute("error","未登录用户");
+            model.addAttribute("error","请输入问题描述");
             return "/publish";
         }
         if(ques_tags==null){
+            model.addAttribute("error","请输入问题标签");
+            return "/publish";
+        }
+        user=userProvider.login(request,user);
+        if(user == null){
             model.addAttribute("error","未登录用户");
             return "/publish";
         }
@@ -87,7 +64,6 @@ public class PublishController {
         ques.setQues_userid(user.getUser_id());
         ques.setQues_id(ques_id);
         quesDtoService.CreateOrUpdate(ques);
-
         return "redirect:/";
     }
 

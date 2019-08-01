@@ -16,6 +16,13 @@ public class ResultDTO<T> {
         resultDTO.setMessage(MESSAGE);
         return resultDTO;
     }
+    public static ResultDTO OKOF(Integer CODE,String MESSAGE)
+    {
+        ResultDTO resultDTO = new ResultDTO();
+        resultDTO.setCode(CODE);
+        resultDTO.setMessage(MESSAGE);
+        return resultDTO;
+    }
 
     public static ResultDTO ERROROF(PeculiarExceptionCodeAndMessage exceptionIMP)
     {
