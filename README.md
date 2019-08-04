@@ -13,6 +13,8 @@
 ![](http://yremp.hk.ufileos.com/1887c95d-f645-46df-97b2-53166a3a6cf4.png?UCloudPublicKey=TOKEN_c8840aa4-b6d1-4b64-b8d0-4f759247250b&Signature=AFayW12hx1W7kjiY09EIv3fOa6M%3D&Expires=1880288990)
 ![](http://yremp.hk.ufileos.com/1dbff5ae-f910-4234-b3c9-01ec481b1522.png?UCloudPublicKey=TOKEN_c8840aa4-b6d1-4b64-b8d0-4f759247250b&Signature=WemP%2FVVBLhBJkkKjlDlTT4E3t5s%3D&Expires=1880289014)
 ![](http://yremp.hk.ufileos.com/2bb452c7-ee07-4b69-aad7-8fbb28994e07.png?UCloudPublicKey=TOKEN_c8840aa4-b6d1-4b64-b8d0-4f759247250b&Signature=LOcBj1T8uT%2FXdFMWQC2MzAmGFU8%3D&Expires=1880289025)
+##### 公共资料面板
+![](http://yremp.hk.ufileos.com/6198ce14-398e-4e63-bfc8-5606806fc1f1.png?UCloudPublicKey=TOKEN_c8840aa4-b6d1-4b64-b8d0-4f759247250b&Signature=9oZv9wbnJ6mDiIhBk1AY06v0DHs%3D&Expires=1880289942)
 #### 个人资料的前端页面还有很大修改的空间
 ### 目录说明
 #### pom.xml maven文件，项目依赖
@@ -43,7 +45,7 @@
 3.clone项目后可能无法使用，需要你修改一下 OAuth Apps 信息，并且在html模板中修改client_id;新建mysql数据库<br>
 4.数据库名称就是项目名称，数据库字段相关都在 database 下面的sql文件里面<br>
 ###  具体的使用逻辑
-这个暂时不细说，代码里面都有注释。
+这个暂时不细说，代码里面都有注释。有任何问题请到[我的博客](https://yremp.live)留言，博客上也有我的联系方式，这个社区在线演示也会长期有效。
 
 
 
