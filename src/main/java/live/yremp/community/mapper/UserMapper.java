@@ -8,4 +8,6 @@ public interface UserMapper {
     public User findById(Integer user_id);
     public User findByGithubId(String user_id);
     public void upTokenById(String token,Integer user_id);
+
+    public void Update(User user);
 }

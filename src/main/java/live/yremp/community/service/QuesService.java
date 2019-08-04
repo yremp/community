@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
-
+//问题对应的一些操作
 @Service
 public class QuesService {
     @Resource
@@ -30,9 +30,6 @@ public class QuesService {
     public List<Question> QueryAll(Integer offset, Integer size) {
         return quesMapper.QueryAll(offset, size);
     }
-
-    ;
-
     public List<Question> QueryAllByUserId(Integer user_id, Integer offset, Integer size) {
         return quesMapper.QueryAllByUserId(user_id, offset, size);
     }
@@ -56,4 +53,13 @@ public class QuesService {
         quesMapper.UpDateComment(question);
     }
     public List<Question> SelectRelatated (Question question){return quesMapper.SelectRelatated(question);}
+
+    public List<Question> QueryBySearchList(String search) {
+        return quesMapper.QueryBySerchList(search);
+    }
+
+    public List<Question> QueryBySearch(String search, Integer offset, Integer size) {
+        return quesMapper.QueryBySerch(search, offset, size);
+    }
+
 }

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="icon" type="image/x-icon" href="https://yremp.live/wp-content/uploads/2019/07/11.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" >
     <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
     <script th:href="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}" type="javascript"></script>
     <meta charset="UTF-8">
-    <title th:text="${actioname}"></title>
+    <title>个人中心</title>
     <style>
         body {
 
@@ -42,7 +43,14 @@
             font-weight: normal;
             color: #999;
         }
-
+        .notice_remove{
+            position: relative;
+            bottom: 5px;
+            height: 30px;
+            width: 50px;
+            padding: 5px;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -62,24 +70,23 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
             </ul>
-            <form class="navbar-form navbar-left">
+            <form class="navbar-form navbar-left" action="/">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="搜索话题">
+                    <input type="text" name="search" class="form-control" th:value="${search}" placeholder="搜索话题">
                 </div>
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li th:if="${session.user!=null}">
-                    <a href="/publish">提问</a>
+                    <a href="/publish">发布</a>
                 </li>
-                <li th:if="${session.user==null}"><a href="https://github.com/login/oauth/authorize?client_id=053b1183a9084a8a5a7c&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登录</a></li>
                 <li class="dropdown" th:if="${session.user!= null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false"><span th:text="${session.user.getUser_name()}"></span><span
                             class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">消息中心</a></li>
-                        <li><a href="#">个人资料</a></li>
+                        <li><a href="/profile/question">我的帖子</a></li>
+                        <li><a href="/user/info">个人资料</a></li>
                         <li><a href="/logout">退出登录</a></li>
 
                     </ul>
@@ -152,17 +159,34 @@
                 </nav>
             </div>
         </div>
+
         <div class="col-lg-9 col-md-12 col-sm-12 col-xl-12" th:if="${action=='reply'}">
-            <div class="col-lg-9 col-md-12 col-sm-12 col-xl-12"  >
-                回复通知内容
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+                <ul class="list-group" th:if="${notices!=null}">
+                    <div class="list-group-item" th:each="notice:${notices}">
+                        <input type="hidden" id="notice_id" th:value="${notice.notic_id}">
+                        <a th:href="@{/user/public/(user_id=${notice.sender.user_id})}">
+                            <span style="color: cadetblue " th:text="${notice.sender.user_name}"></span>
+                        </a>
+                        <span>在</span>
+                        <a style="color: #f10d0d " th:text="${notice.title}" th:href="@{'/notice/'+${notice.notic_id}}"></a>
+                        <span style="color: cadetblue " th:text="${notice.type}"></span>
+                        <span class="badge" style=" background-color: #f10d0d ;color:#fff; float: none" th:if="${notice.status==1}">未读</span>
+                        <span class="badge" style=" background-color: #5cb85c ;color:#fff; float: none" th:if="${notice.status==2}">已读</span>
+                        <button class="btn btn-danger pull-right notice_remove" onclick="removednotice()">移除</button>
+                    </div>
+
+
+                </ul>
             </div>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xl-12" >
             <div class="list-group">
                 <a href="/profile/question" th:class="${action=='question'}?'active list-group-item':'list-group-item'" class="section">
-                    我的问题
+                    我的帖子
                 </a>
-                <a href="/profile/reply" th:class="${action=='reply'}?'active list-group-item':'list-group-item'" class="section">最新回复 <span class="badge">4</span></a>
+                <a href="/profile/reply" th:class="${action=='reply'}?'active list-group-item':'list-group-item'"
+                   class="section">最新回复 <span class="badge" th:text="${noticescount}">4</span></a>
 
             </div>
         </div>
@@ -170,6 +194,7 @@
 </div>
 </body>
 </html>
+
 <script>
 
     function deleteById(ques_id) {
@@ -184,6 +209,35 @@
             success: function (response) {
                 if (response.code == 100) {
                     alert(response.message);
+                    $(".questuonlist").load(location.href + " .questuonlist");
+                } else if (response.code == 108) {
+                    alert(response.message)
+                } else {
+                    if (response.code == 101) {
+                        var IsAccept = confirm(response.message);
+                        if (IsAccept) {
+                            window.open("https://github.com/login/oauth/authorize?client_id=b45ee8bb32c198bf2bfa&redirect_uri=http://www.yremp.live:1234/callback&scope=user&state=1")
+                            window.localStorage.setItem("closable", "true");
+                        }
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            }
+        })
+    }
+    function deleteByNoticeId(notice_id) {
+
+        $.ajax({
+            type: "POST",
+            contentType: 'application/json',
+            url: "/profile/removenotice",
+            data: JSON.stringify({
+                "notice_id": notice_id
+            }),
+            success: function (response) {
+                if (response.code == 100) {
+                    alert(response.message);
                     window.location.reload();
                 } else if (response.code == 108) {
                     alert(response.message)
@@ -191,7 +245,7 @@
                     if (response.code == 101) {
                         var IsAccept = confirm(response.message);
                         if (IsAccept) {
-                            window.open("https://github.com/login/oauth/authorize?client_id=053b1183a9084a8a5a7c&redirect_uri=http://localhost:8080/callback&scope=user&state=1")
+                            window.open("https://github.com/login/oauth/authorize?client_id=b45ee8bb32c198bf2bfa&redirect_uri=http://www.yremp.live:1234/callback&scope=user&state=1")
                             window.localStorage.setItem("closable", "true");
                         }
                     } else {
@@ -202,10 +256,15 @@
         })
     }
     function deleted(){
-        var IsAccept = confirm("确定删除该问题以及所有评论吗");
+        var IsAccept = confirm("确定删除该帖子、评论、以及对应的通知吗？");
        if(IsAccept){
            var question_id = $("#ques_id").val();
            deleteById(question_id);
        }
     }
+    function removednotice(){
+        var notice_id = $("#notice_id").val();
+        deleteByNoticeId(notice_id)
+    }
+
 </script>

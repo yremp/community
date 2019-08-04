@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--映射文件配置 namespace指向接口-->
+<mapper namespace="live.yremp.community.mapper.NoticeMapper">
+    <insert id="Insert">
+        INSERT INTO `community`.`notice`( `notice_senderid`, `notice_receiverid`, `notice_sendername`, `gmt_create`, `status`, `type` ,`notice_qcparentid`)  VALUES (#{notice_senderid}, #{notice_receiverid}, #{notice_sendername}, #{gmt_create}, #{status}, #{type},#{notice_qcparentid});
+    </insert>
+    <select id="SelectByRecriverId" parameterType="Integer" resultType="live.yremp.community.entity.Notice">
+        select *
+        from notice
+         where notice_receiverid = #{current_user_id}
+          and notice_senderid !=#{current_user_id}
+        ORDER BY gmt_create desc
+    </select>
+    <select id="SelectUnReadByRecriverId" parameterType="Integer" resultType="live.yremp.community.entity.Notice">
+        select * from notice where notice_receiverid = #{current_user_id} and notice_senderid !=#{current_user_id} and status=1
+    </select>
+    <select id="SelectById" parameterType="Integer" resultType="live.yremp.community.entity.Notice">
+        select * from notice where notice_id = #{value};
+    </select>
+    <update id="UpDateStatus">
+        update notice set status=2 where notice_id=#{notice_id}
+    </update>
+    <delete id="deleteByParentId" parameterType="Integer">
+        delete from notice where notice_qcparentid =#{value}
+    </delete>
+    <delete id="deleteById" parameterType="Integer">
+        delete from notice where notice_id =#{value}
+    </delete>
+</mapper>

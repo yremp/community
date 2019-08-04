@@ -29,7 +29,7 @@
         select * from ques ORDER BY gmt_create desc limit #{offset} ,#{size}
     </select>
     <select id="QueryAllByUserId" resultMap="QuestionResult" parameterType="Integer">
-        select * from ques where ques_userid=#{user_id} limit #{offset} ,#{size}
+        select * from ques where ques_userid=#{user_id} ORDER BY gmt_create desc limit #{offset} ,#{size}
     </select>
     <select id="count" resultType="Integer">
         select count(1) from ques
@@ -55,4 +55,22 @@
     <delete id="DeleteById" parameterType="Integer">
         delete from ques where ques_id=#{value}
     </delete>
+    <select id="QueryBySerchList" parameterType="java.lang.String" resultType="live.yremp.community.entity.Question">
+        select * from ques
+        <where>
+            <if test="search !=null and search !=''">
+                ques_title regexp #{search}
+            </if>
+        </where>
+    </select>
+    <select id="QueryBySerch" parameterType="java.lang.String" resultType="live.yremp.community.entity.Question">
+        select * from ques
+        <where>
+            <if test="search !=null and search !=''">
+                 ques_title regexp #{search}
+            </if>
+        </where>
+        limit #{offset} ,#{size}
+    </select>
+
 </mapper>

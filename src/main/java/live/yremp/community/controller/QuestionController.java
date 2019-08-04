@@ -10,6 +10,7 @@ import live.yremp.community.enums.CommenTypeEnum;
 import live.yremp.community.exception.PeculiarExceptionCodeAndMessage;
 import live.yremp.community.provider.UserProvider;
 import live.yremp.community.service.CommentService;
+import live.yremp.community.service.NoticeService;
 import live.yremp.community.service.QuesDtoService;
 import live.yremp.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,27 @@ public class QuestionController {
     UserService userService;
     @Autowired
     UserProvider userProvider;
+    @Autowired
+    NoticeService noticeService;
     @GetMapping("/question/{ques_id}")
 
     public String question(@PathVariable("ques_id")Integer ques_id,
                            Model model,
                            HttpServletRequest request) {
-        userProvider.login(request);
+        User user=null;
+        user=userProvider.login(request,user);
         QuesDTO quesDto = quesDtoService.findById(ques_id);
         List<QuesDTO> relatedquestions = quesDtoService.selectRealated(quesDto);
         List<CommentDTO> comments =commentService.ListByQuestinId(ques_id, CommenTypeEnum.QUESTION.getType());
+//        阅读数+1
         quesDtoService.AddReadCount(ques_id);
+//        返回消息通知数量count
+        if(user!=null){
+            Integer count = noticeService.listunread(user);
+            model.addAttribute("noticescount", count);
+        }else {
+            model.addAttribute("noticescount", 0);
+        }
 //        返回QuestionDTO
         model.addAttribute("question",quesDto);
 //        返回CommentDTO 回复列表
@@ -51,6 +63,8 @@ public class QuestionController {
 
     }
 
+
+//    删除问题以及相关评论
     @RequestMapping(value = "/profile/question", method = RequestMethod.POST)
     @ResponseBody
     public Object delete(@RequestBody JSONObject data,
@@ -63,4 +77,5 @@ public class QuestionController {
         ResultDTO resultDTO=ResultDTO.OKOF(100,"操作成功");
         return resultDTO;
     }
+
 }

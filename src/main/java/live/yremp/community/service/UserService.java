@@ -23,4 +23,7 @@ public class UserService {
     @Transactional(rollbackFor = Exception.class)
     public void Insert(User user){userMapper.Insert(user);}
 
+    public void Update(User user){
+        userMapper.Update(user);
+    }
 }

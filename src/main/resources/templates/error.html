@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:src="http://www.w3.org/1999/xhtml">
 <head>
+    <link rel="icon" type="image/x-icon" href="https://yremp.live/wp-content/uploads/2019/07/11.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
     <script th:href="@{/webjars/bootstrap/4.3.1/js/bootstrap.js}" type="javascript"></script>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>出错啦</title>
     <style>
         *{
             margin: 0;
@@ -20,12 +21,16 @@
             margin-bottom: 20px;
             margin-right: 10px;
         }
+        .message{
+            font-size:18px;
+            margin-left: 100px;
+        }
     </style>
 </head>
 <body>
 <div class="jumbotron">
-    <h3 th:if="${message==null}">对不起，没找到您访问的页面</h3>
-    <h3 th:text="${message}"></h3>
+    <h3 class="message" th:if="${message==null}">对不起，没找到您访问的页面</h3>
+    <h3 class="message" th:text="${message}"></h3>
     <p><a class="btn btn-primary btn-lg" href="#" role="button" th:href="@{'/'}">返回主页</a></p>
 </div>
 </body>

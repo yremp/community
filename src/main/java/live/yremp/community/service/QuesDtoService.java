@@ -25,7 +25,10 @@ public class QuesDtoService {
     UserService userService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    NoticeService noticeService;
 
+//    删除问题、以及对应的一级和二级评论
     public void delete(Integer ques_id) {
         Question question = quesService.findById(ques_id);
         if (question == null) {
@@ -52,12 +55,14 @@ public class QuesDtoService {
         } else {
             throw new PeculiarException(PeculiarExceptionCodeAndMessage.COMMENT_NOT_FOUND);
         }
+//        删除问题相关的通知
+        noticeService.deleteByParentId(ques_id);
 //        删除问题
         quesService.DeleteById(ques_id);
     }
 
+//    首页帖子分页
     public PageDTO list1(Integer page, Integer size) {
-
         Integer totalPage;
         PageDTO pageDto = new PageDTO();
         Integer totalCount = quesService.count();
@@ -81,6 +86,7 @@ public class QuesDtoService {
             return pageDto;
     }
 
+//个人对应的帖子分页
     public PageDTO list2(Integer user_id, Integer page, Integer size) {
         Integer totalPage;
         PageDTO pageDto = new PageDTO();
@@ -111,6 +117,7 @@ public class QuesDtoService {
         return pageDto;
     }
 
+//    具体问题对应的信息
     public QuesDTO findById(Integer ques_id) {
         Question question = quesService.findById(ques_id);
         if (question == null) {
@@ -123,6 +130,7 @@ public class QuesDtoService {
         return quesDto;
     }
 
+//    publish 根据ques_id是否存在决定更新还是创建帖子
     public void CreateOrUpdate(Question ques) {
         if (ques.getQues_id() == null) {
 //            创建
@@ -141,18 +149,21 @@ public class QuesDtoService {
         }
     }
 
+//    增加阅读数
     public void AddReadCount(Integer ques_id) {
         Question question = quesService.findById(ques_id);
         question.setQues_read(question.getQues_read() + 1);
         quesService.UpDateRead(question);
     }
 
+//    增加评论数
     public void AddCommentCount(Integer ques_id) {
         Question question = quesService.findById(ques_id);
         question.setQues_comment(question.getQues_comment() + 1);
         quesService.UpDateComment(question);
     }
 
+//    返回相关问题列表
     public List<QuesDTO> selectRealated(QuesDTO quesDto) {
         if (quesDto.getQues_tags() == null) {
             return new ArrayList<>();
@@ -171,5 +182,38 @@ public class QuesDtoService {
             }).collect(Collectors.toList());
             return quesDTOS;
         }
+    }
+
+//    搜索问题分页
+    public PageDTO list1(String search,Integer page, Integer size) {
+
+        Integer totalPage;
+        PageDTO pageDto = new PageDTO();
+        List<Question> questionsbysearch = quesService.QueryBySearchList(search);
+        Integer totalCount;
+        if(questionsbysearch!=null){
+            totalCount=questionsbysearch.size();
+        }
+        else {
+             totalCount=0;
+        }
+        if (totalCount % size == 0) {
+            totalPage = totalCount / size;
+        } else {
+            totalPage = totalCount / size + 1;
+        }
+        pageDto.setPagenation(totalPage, page);
+        Integer offset = size * (page - 1);
+        List<Question> ques = quesService.QueryBySearch(search,offset, size);
+        List<QuesDTO> quesDTOList = new ArrayList<>();
+        for(Question question:ques){
+            User user =userService.findById(question.getQues_userid());
+            QuesDTO quesDto = new QuesDTO();
+            BeanUtils.copyProperties(question,quesDto);
+            quesDto.setUser(user);
+            quesDTOList.add(quesDto);
+        }
+        pageDto.setQuestions(quesDTOList);
+        return pageDto;
     }
 }

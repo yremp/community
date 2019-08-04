@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="icon" type="image/x-icon" href="https://yremp.live/wp-content/uploads/2019/07/11.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/yremp/editormd/css/editormd.preview.css" />
     <script src="https://yremp.live/wp-content/uploads/resource/js/moment.js"></script>
@@ -153,6 +154,16 @@
                 float: right;
             }
         }
+
+        .icon-bell {
+            margin-top: 0px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .icon-meassage {
+            background-color: #f10d0d;
+        }
     </style>
 </head>
 <body>
@@ -173,26 +184,30 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
             </ul>
-            <form class="navbar-form navbar-left">
+            <form class="navbar-form navbar-left" action="/">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="搜索话题">
+                    <input type="text" name="search" class="form-control" th:value="${search}" placeholder="搜索话题">
                 </div>
                 <button type="submit" class="btn btn-default">搜索</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
+                <li><a th:href="@{/profile/reply}"><span class="glyphicon glyphicon-bell icon-bell"
+                                                         aria-hidden="true"></span><span
+                        class="badge icon-meassage" th:text="${noticescount}">4</span> </a></li>
                 <li th:if="${session.user!=null}">
-                    <a href="/publish">提问</a>
+                    <a href="/publish">发布</a>
                 </li>
-                <li th:if="${session.user==null}"><a
-                        href="https://github.com/login/oauth/authorize?client_id=053b1183a9084a8a5a7c&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登录</a>
+                <li th:if="${session.user==null}">
+                    <a onclick="tologin()">登录
+                    </a>
                 </li>
                 <li class="dropdown" th:if="${session.user!= null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false"><span th:text="${session.user.getUser_name()}"></span><span
                             class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="/profile/question">我的问题</a></li>
-                        <li><a href="#">个人资料</a></li>
+                        <li><a href="/profile/question">我的帖子</a></li>
+                        <li><a href="/user/info">个人资料</a></li>
                         <li><a href="/logout">退出登录</a></li>
 
                     </ul>
@@ -239,7 +254,7 @@
             </a>
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
 
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12 reply-model">
                 <h4>
                     当前共有<span th:text="${question.ques_comment}"></span>个回复
                 </h4>
@@ -249,11 +264,15 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12 comment_listItem" th:each="comment:${comments}">
                     <div class="media-left media-middle">
                         <span>
+                             <a th:href="@{/user/public/(user_id=${comment.user.user_id})}">
                             <img class="media-object img-thumbnail header" th:src="@{${comment.user.user_img}}">
+                             </a>
                         </span>
                     </div>
                     <div class="media-body" th:id="${'comment-body-'+comment.comm_id}">
-                        <span class="media-heading" th:text="${comment.user.user_name}"></span><br>
+                        <a th:href="@{/user/public/(user_id=${comment.user.user_id})}">
+                        <span class="media-heading" th:text="${comment.user.user_name}"></span>
+                        </a>  <br>
                         <span class="text-desc" th:text="${comment.comm_info}">这是回复内容</span><br>
                         <span class="glyphicon glyphicon-comment comment_icon " onclick="display(this)"
                               th:data-id="${comment.comm_id}"><span class="comm_text"
@@ -326,16 +345,22 @@
                 <div class="media">
                     <div class="media-left media-middle">
                         <span>
-                            <img class="media-object img-circle header" th:src="@{${question.user.user_img}}">
+                             <a th:href="@{/user/public/(user_id=${question.user.user_id})}">
+                                  <img class="media-object img-circle header" th:src="@{${question.user.user_img}}">
+                             </a>
+
                         </span>
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading" th:text="${question.user.user_name}"></h4>
+                        <a th:href="@{/user/public/(user_id=${question.user.user_id})}">
+                            <h4 class="media-heading" th:text="${question.user.user_name}"></h4>
+                        </a>
+
                     </div>
                 </div>
             </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xl-12" >
-                <h5>相关问题</h5>
+                <h5>相关</h5>
                 <ul class="list-group">
                     <li  th:each="relataedquestion:${relatedquestions}"  class="list-group-item">
                         <a th:href="@{'/question/'+${relataedquestion.ques_id}}" style="font-size: 13px" th:text="${relataedquestion.ques_title}"></a>
@@ -362,14 +387,15 @@
             }),
             success: function (response) {
                 if (response.code == 100) {
-                    window.location.reload();
+                    $("#comment_info").val('');
+                    $(".reply-model").load(location.href + " .reply-model");
                 } else if (response.code == 108) {
                     alert(response.message)
                 } else {
                     if (response.code == 101) {
                         var IsAccept = confirm(response.message);
                         if (IsAccept) {
-                            window.open("https://github.com/login/oauth/authorize?client_id=053b1183a9084a8a5a7c&redirect_uri=http://localhost:8080/callback&scope=user&state=1")
+                            window.open("https://github.com/login/oauth/authorize?client_id=b45ee8bb32c198bf2bfa&redirect_uri=http://www.yremp.live:1234/callback&scope=user&state=1")
                             window.localStorage.setItem("closable", "true");
                         }
                     } else {
@@ -475,6 +501,10 @@
             }
 
         }
+    }
+    function tologin() {
+        window.location.href="https://github.com/login/oauth/authorize?client_id=b45ee8bb32c198bf2bfa&redirect_uri=http://www.yremp.live:1234/callback&scope=user&state=1";
+
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>

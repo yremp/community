@@ -26,10 +26,10 @@ public class PeculiarExceptionHandler {
 //    设置返回ModelAndView-(html)
     ModelAndView handler(HttpServletRequest request, Model model, Throwable e,HttpServletResponse response) {
        String contentType=request.getContentType();
-        //           判断是否为json广化寺
+       System.out.println(contentType);
+        //           判断是否为json
         if("application/json".equals(contentType)){
-//            异常
-            System.out.println("---------------->Json请求");
+            System.out.println("---------------->Json");
             ResultDTO resultDTO;
 //            PeculiarException 异常
             if(e instanceof PeculiarException) {

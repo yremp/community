@@ -29,4 +29,8 @@ public interface QuesMapper {
     public List<Question> SelectRelatated (Question question);
     
     public void DeleteById(Integer ques_id);
+
+    public List<Question> QueryBySerchList(String search);
+
+    public List<Question> QueryBySerch(String search, Integer offset, Integer size);
 }

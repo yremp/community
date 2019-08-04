@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-
+//文件上传
 @Controller
 public class FileUploadController {
     private String fileurl;
@@ -23,6 +23,7 @@ public class FileUploadController {
         MultipartHttpServletRequest multipartHttpServletRequest=(MultipartHttpServletRequest) request;
         MultipartFile file = multipartHttpServletRequest.getFile("editormd-image-file");
         try {
+//ucloudProvider 拿到文件url
           String fileurl=  ucloudProvider.upload(file.getInputStream(),file.getContentType(),file.getOriginalFilename());
             FileDTO fileDTO = new FileDTO();
             fileDTO.setSuccess(1);
@@ -37,6 +38,5 @@ public class FileUploadController {
         fileDTO.setMessage("成功");
         fileDTO.setUrl(fileurl);
         return fileDTO;
-
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-
+//异常处理
 @Controller
 @RequestMapping("${server.error.path:${error.path:/error}}")
 public class PeculiarExceptionController implements ErrorController {
@@ -23,10 +23,10 @@ public class PeculiarExceptionController implements ErrorController {
     public ModelAndView errorHtml(HttpServletRequest request, Model model) {
         HttpStatus status = getStatus(request);
         if(status.is4xxClientError()){
-            model.addAttribute("message","客户端请求异常,小哥哥换别的页面试试吧");
+            model.addAttribute("message","你查看的页面不在了哦,换别的页面试试吧");
         }
         if(status.is5xxServerError()){
-            model.addAttribute("message","别点了，服务器已经炸了");
+            model.addAttribute("message","服务器可能得病了，一会再试吧");
         }
         return new ModelAndView("error");
     }
