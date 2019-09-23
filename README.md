@@ -43,7 +43,7 @@
 1.intercept 这个包可以删除<br>
 2.static下面的editormd 是markdown编辑器文件，但是我并没有使用，而是将它放到了我个人服务器上面然后引用的。<br>
 3.clone项目后可能无法使用，需要你修改一下 OAuth Apps 信息，并且在html模板中修改client_id;新建mysql数据库<br>
-4.数据库名称就是项目名称，数据库字段相关都在 database 下面的sql文件里面<br>
+4.数据库文件在 resources的下面的sql文件里面<br>
 ###  具体的使用逻辑
 这个暂时不细说，代码里面都有注释。有任何问题请到[我的博客](https://yremp.live)留言，博客上也有我的联系方式，这个社区在线演示也会长期有效。
 
