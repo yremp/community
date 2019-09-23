@@ -6,7 +6,7 @@
 <!--映射文件配置 namespace指向接口-->
 <mapper namespace="live.yremp.community.mapper.NoticeMapper">
     <insert id="Insert">
-        INSERT INTO `community`.`notice`( `notice_senderid`, `notice_receiverid`, `notice_sendername`, `gmt_create`, `status`, `type` ,`notice_qcparentid`)  VALUES (#{notice_senderid}, #{notice_receiverid}, #{notice_sendername}, #{gmt_create}, #{status}, #{type},#{notice_qcparentid});
+        INSERT INTO `notice`( `notice_senderid`, `notice_receiverid`, `notice_sendername`, `gmt_create`, `status`, `type` ,`notice_qcparentid`)  VALUES (#{notice_senderid}, #{notice_receiverid}, #{notice_sendername}, #{gmt_create}, #{status}, #{type},#{notice_qcparentid});
     </insert>
     <select id="SelectByRecriverId" parameterType="Integer" resultType="live.yremp.community.entity.Notice">
         select *

@@ -7,7 +7,7 @@
 
     <!--新增一条数据-->
     <insert id="Insert" parameterType="live.yremp.community.entity.User">
-        INSERT INTO `community`.`user`( `account_id`, `user_name`, `user_token`, `user_img`, `gmt_create`,
+        INSERT INTO `user`( `account_id`, `user_name`, `user_token`, `user_img`, `gmt_create`,
         `gmt_modified`, `user_bio`, `user_blog`, `user_github`)
         VALUES ( #{account_id}, #{user_name}, #{user_token},#{user_img}, #{gmt_create},
         #{gmt_modified},#{user_bio},#{user_blog},#{user_github});
@@ -26,10 +26,10 @@
         select * from user where account_id=#{user_id}
     </select>
     <update id="upTokenById">
-        UPDATE `community`.`user` SET `user_token` =#{token} WHERE `user_id` = #{user_id}
+        UPDATE `user` SET `user_token` =#{token} WHERE `user_id` = #{user_id}
     </update>
     <update id="Update">
-        UPDATE `community`.`user` SET  `user_name` = #{user_name}, `user_img` = #{user_img},
+        UPDATE `user` SET  `user_name` = #{user_name}, `user_img` = #{user_img},
     `user_bio` = #{user_bio}, `user_blog` = #{user_blog}, `user_github` = #{user_github}
     WHERE `user_id` = #{user_id};
     </update>
